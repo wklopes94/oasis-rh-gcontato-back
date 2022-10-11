@@ -10,6 +10,9 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
@@ -40,12 +43,29 @@ import com.oasis.apigestmenu.repositories.ColaboradorRepository;
 import com.oasis.apigestmenu.repositories.DepartamentoRepository;
 import com.oasis.apigestmenu.services.ColaboradorService;
 import com.oasis.apigestmenu.services.HotelService;
+import static java.nio.file.Files.copy;
+import static java.nio.file.Paths.get;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import org.springframework.util.StringUtils;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RepositoryRestController
 @BasePathAwareController
 public class ColaboradorController {
+	
+	// define a location
+    public static final String DIRECTORY = System.getProperty("user.home") + "/Downloads/uploads/";
 	
 	final ColaboradorService service;
 
@@ -85,6 +105,8 @@ public class ColaboradorController {
 	
 	
 	
+	
+	
 	@ResponseBody
 	@PutMapping(value = "colaboradores/{id}", path="colaboradores/{id}")
 	public ResponseEntity<Object> updateColaborador(@PathVariable(value = "id") UUID id,
@@ -119,7 +141,6 @@ public class ColaboradorController {
 		return ResponseEntity.status(HttpStatus.OK).body("Hotel deleted successfuly");
 
 	}
-	
 	
 	
 
